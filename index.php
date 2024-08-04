@@ -1,3 +1,14 @@
 <?php
 
-phpinfo();
+// Дефайним путь корня в index. чтобы потом везде юзать
+define('APP_PATH', __DIR__);
+
+require_once APP_PATH . '/vendor/autoload.php';
+
+use App\App;
+
+$app = new App();
+
+$app->run();
+
+// dd(APP_PATH);
