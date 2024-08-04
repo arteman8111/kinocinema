@@ -1,11 +1,15 @@
 <?php
-// Делаем маршрутизацию через php с одного индекса
-// Записываем в массив routes.php все пути файлов
+
+use App\Router\Route;
+
 return [
-    '/home' => function () {
-        include_once APP_PATH . '/views/pages/home.php';
-    },
-    '/movies' => function () {
-        include_once APP_PATH . '/views/pages/movies.php';
-    },
+    Route::get('/home', function () {
+        include_once APP_PATH.'/views/pages/home.php';
+    }),
+    Route::get('/movies', function () {
+        include_once APP_PATH.'/views/pages/movies.php';
+    }),
+    Route::post('/test', function () {
+        include_once APP_PATH.'/views/pages/movies.php';
+    }),
 ];

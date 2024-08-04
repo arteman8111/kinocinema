@@ -1,20 +1,59 @@
 <?php
 
-// Используем пространство имен Router
 namespace App\Router;
 
 class Router
 {
-    public function dispatch(string $uri): void
+    private array $routes = [
+        'GET' => [],
+        'POST' => [],
+    ];
+
+    public function __construct()
     {
-        // Маршрутизация по REQUEST_URI = /{uri}
-        $routes = $this->getRoutes();
-        // Вызов функии по ключу $routes
-        $routes[$uri]();
+        $this->initRoutes();
     }
 
-    private function getRoutes():array
+    public function dispatch(string $uri, string $method): void
     {
-        return require_once APP_PATH . '/config/routes.php';
-    }   
+        $route = $this->findRoute($uri, $method);
+
+        if (! $route) {
+            $this->notFound();
+        }
+
+        $route->getAction()();
+    }
+
+    private function notFound(): void
+    {
+        echo '404 | Not Found';
+        exit;
+    }
+
+    private function findRoute(string $uri, string $method): Route|false
+    {
+        if (! isset($this->routes[$method][$uri])) {
+            return false;
+        }
+
+        return $this->routes[$method][$uri];
+    }
+
+    private function initRoutes(): void
+    {
+        $routes = $this->getRoutes();
+
+        foreach ($routes as $route) {
+            $this->routes[$route->getMethod()][$route->getUri()] = $route;
+        }
+    }
+
+    /**
+     * @return Route[]
+     */
+    private function getRoutes(): array
+    {
+        return require_once APP_PATH.'/config/routes.php';
+    }
 }
